@@ -129,6 +129,8 @@ L.MatrixUtil = {
 L.EditHandle = L.Marker.extend({
 	initialize: function(overlay, corner, options) {
 		console.log('init inside EditHandler');
+		console.log('corner ' + corner);
+		
 		console.log(overlay);
 		
 		var markerOptions,
@@ -312,27 +314,27 @@ L.DistortableImageOverlay = L.ImageOverlay.extend({
 		alt: 'Option inside plugin',
 		interactive: true,
 		crossOrigin: true,
-		height: 520,
-		newOp: 'this should be merged to wrapper options',
+		height: 200,
 		// this height is tricky, without it the plugin can not work
 	},
 
 	initialize: function(url, options) {
-		console.log('initialize');
-		console.log('"this" is DistortableImageOverlay object');
-		console.log(this);
+		// console.log('initialize');
+		// console.log('"this" is DistortableImageOverlay object');
+		// console.log(this);
 		this._url = url;
 		this._rotation = this.options.rotation;
-		console.log('this.options inside plugin');
-		console.log(this.options);
+		this._corners = options.corners;
+		// console.log('this.options inside initialize');
+		// console.log(options);
 		// the options here does not have data in vue wrapper
 		L.setOptions(this, options);
-		console.log('"this" after setOptions');
-		console.log(this);
+		// console.log('"this" after setOptions');
+		// console.log(this);
 	},
 
 	onAdd: function(map) {
-		console.log('onAdd: this.options.corners ');
+		// console.log('onAdd: this.options.corners ');
 		/* Copied from L.ImageOverlay */
 		this._map = map;
 
@@ -675,7 +677,7 @@ L.DistortableImage.EditToolbar = LeafletToolbar.Popup.extend({
 	}
 });
 
-L.DistortableImage = L.DistortableImage || {};
+// L.DistortableImage = L.DistortableImage || {};
 
 L.DistortableImage.Edit = L.Handler.extend({
 	options: {
@@ -699,11 +701,11 @@ L.DistortableImage.Edit = L.Handler.extend({
 		this._transparent = false;
 		this._outlined = false;
 
-		// this._handles = { 
-		// 	'lock':		 this._lockHandles, 
-		// 	'distort': this._distortHandles, 
-		// 	'rotate':	this._rotateHandles
-		// };
+		this._handles = { 
+			'lock':		 this._lockHandles, 
+			'distort': this._distortHandles, 
+			'rotate':	this._rotateHandles
+		};
 	},
 
 	/* Run on image seletion. */
@@ -908,11 +910,12 @@ L.DistortableImage.Edit = L.Handler.extend({
 	_toggleLock: function() {
 		console.log('run _toggleLock');
 		var map = this._overlay._map;
+
 		console.log('overlay');
 		console.log(this._overlay);
 		
-		console.log('map ' + map);
-		console.log('this._handles ' + JSON.stringify(this._handles));
+		console.log('this._handles');
+		console.log(this._handles);
 		
 		map.removeLayer(this._handles[this._mode]);
 
@@ -980,25 +983,24 @@ L.DistortableImage.Edit = L.Handler.extend({
 });
 
 L.DistortableImageOverlay.addInitHook(function() {
-	console.log('this inside addInitHook');
-	console.log(this);
+	// console.log('this inside addInitHook');
+	// console.log(this);
 	this.editing = new L.DistortableImage.Edit(this);
-	console.log('editing handle got injected into image overlay');
-	console.log(this.editing);
+	// console.log('editing handle got injected into image overlay');
+	// console.log(this.editing);
 	// 'this' is the image object, and it works fine.
-	console.log('this.options is called when the imageOverlay init');
-	console.log(this.options);
+	// console.log('this.options is called when the imageOverlay init');
+	// console.log(this.options);
 	// crash after this.
-	console.log('start enabling the edit handle');
+	// console.log('start enabling the edit handle');
 	if (this.options.editable) {
 		// this.options get correct data from vue wrapper
 		// 'this' does not have _image yet
 		// we want to turn on the enable after the _image loaded
-		
-		L.DomEvent.on(this._image, 'load', this.editing.enable, this.editing);
-		// crash after this !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-		console.log('finish enabling the edit handle');
+		// L.DomEvent.on(this._image, 'load', this.editing.enable, this.editing);
+		L.DomEvent.on(this.editing, 'load', this.editing.enable);
+		// console.log('finish enabling the edit handle');
 	}
 
 	this.on('remove', function () {

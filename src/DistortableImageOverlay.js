@@ -5,27 +5,27 @@ L.DistortableImageOverlay = L.ImageOverlay.extend({
 		alt: 'Option inside plugin',
 		interactive: true,
 		crossOrigin: true,
-		height: 520,
-		newOp: 'this should be merged to wrapper options',
+		height: 200,
 		// this height is tricky, without it the plugin can not work
 	},
 
 	initialize: function(url, options) {
-		console.log('initialize');
-		console.log('"this" is DistortableImageOverlay object');
-		console.log(this);
+		// console.log('initialize');
+		// console.log('"this" is DistortableImageOverlay object');
+		// console.log(this);
 		this._url = url;
 		this._rotation = this.options.rotation;
-		console.log('this.options inside plugin');
-		console.log(this.options);
+		this._corners = options.corners;
+		// console.log('this.options inside initialize');
+		// console.log(options);
 		// the options here does not have data in vue wrapper
 		L.setOptions(this, options);
-		console.log('"this" after setOptions');
-		console.log(this);
+		// console.log('"this" after setOptions');
+		// console.log(this);
 	},
 
 	onAdd: function(map) {
-		console.log('onAdd: this.options.corners ');
+		// console.log('onAdd: this.options.corners ');
 		/* Copied from L.ImageOverlay */
 		this._map = map;
 
