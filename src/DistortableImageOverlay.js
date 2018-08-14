@@ -2,19 +2,30 @@ L.DistortableImageOverlay = L.ImageOverlay.extend({
 	include: L.Mixin.Events,
 
 	options: {
-		alt: '',
-		height: 200,
-		crossOrigin: true
+		alt: 'Option inside plugin',
+		interactive: true,
+		crossOrigin: true,
+		height: 520,
+		newOp: 'this should be merged to wrapper options',
+		// this height is tricky, without it the plugin can not work
 	},
 
 	initialize: function(url, options) {
+		console.log('initialize');
+		console.log('"this" is DistortableImageOverlay object');
+		console.log(this);
 		this._url = url;
 		this._rotation = this.options.rotation;
-
+		console.log('this.options inside plugin');
+		console.log(this.options);
+		// the options here does not have data in vue wrapper
 		L.setOptions(this, options);
+		console.log('"this" after setOptions');
+		console.log(this);
 	},
 
 	onAdd: function(map) {
+		console.log('onAdd: this.options.corners ');
 		/* Copied from L.ImageOverlay */
 		this._map = map;
 
@@ -36,7 +47,7 @@ L.DistortableImageOverlay = L.ImageOverlay.extend({
 			/* This reset happens before image load; it allows 
 			 * us to place the image on the map earlier with 
 			 * "guessed" dimensions. */
-			this._reset();
+			this._reset(); 
 		}
 
 		/* Have to wait for the image to load because 
@@ -50,9 +61,9 @@ L.DistortableImageOverlay = L.ImageOverlay.extend({
 					map.on('zoomanim', this._animateZoom, this);
 				}
 			}
-		}, this);		
+		}, this);
 
-		this.fire('add');	
+		this.fire('add');
 	},
 
 	onRemove: function(map) {
@@ -170,13 +181,16 @@ L.DistortableImageOverlay = L.ImageOverlay.extend({
 			latLngToNewLayerPoint = function(latlng) {
 				return map._latLngToNewLayerPoint(latlng, event.zoom, event.center);
 			},
-	
+
 			transformMatrix = this._calculateProjectiveTransform(latLngToNewLayerPoint),
 			topLeft = latLngToNewLayerPoint(this._corners[0]),
 	
 			warp = L.DomUtil.getMatrixString(transformMatrix),
 			translation = this._getTranslateString(topLeft);
-	
+
+		// console.log('latLngToNewLayerPoint ' + latLngToNewLayerPoint);
+		// console.log('transformMatrix ' + transformMatrix);
+
 		/* See L.DomUtil.setPosition. Mainly for the purposes of L.Draggable. */
 		image._leaflet_pos = topLeft;
 	
@@ -238,3 +252,13 @@ L.DistortableImageOverlay = L.ImageOverlay.extend({
 		);
 	}
 });
+
+/**
+ * Factory function to create the symbol.
+ * @method distortableImageOverlay
+ * @param url {String} The url of image.
+ * @param options {Object} Additional options. 
+ */
+L.distortableImageOverlay = function (url, options) {
+	return new L.DistortableImageOverlay(url, options);
+};

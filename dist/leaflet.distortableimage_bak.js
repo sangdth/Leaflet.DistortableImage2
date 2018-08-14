@@ -40,8 +40,8 @@ L.Map.include({
 		return this.unproject(point.add(topLeft), newZoom);
 	}
 });
-L.MatrixUtil = {
 
+L.MatrixUtil = {
 	// Compute the adjugate of m
 	adj: function(m) { 
 		return [
@@ -126,14 +126,12 @@ L.MatrixUtil = {
 		return L.MatrixUtil.multsm(1/m[8], m);
 	}
 };
+
 L.EditHandle = L.Marker.extend({
 	initialize: function(overlay, corner, options) {
-		console.log('init inside EditHandler');
-		console.log(overlay);
-		
 		var markerOptions,
 			latlng = overlay._corners[corner];
-		
+
 		L.setOptions(this, options);
 
 		this._handled = overlay;
@@ -211,7 +209,8 @@ L.LockHandle = L.EditHandle.extend({
 	},
 
 	/* cannot be dragged */
-	_onHandleDrag: function() {},
+	_onHandleDrag: function() {
+	},
 
 	updateHandle: function() {
 		this.setLatLng(this._handled._corners[this._corner]);
@@ -224,8 +223,8 @@ L.DistortHandle = L.EditHandle.extend({
 		TYPE: 'distort',
 		icon: new L.Icon({
 			iconUrl: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAklEQVR4AewaftIAAAChSURBVO3BIU4DURgGwNkvL2B6AkQTLBqP4QCoSm7DDXoBLBZHDbfgICAIZjEV3YTn9uVHdMZZtcnCfI13bIzxg0emg6Nm6QVbYz3jylEsXRrvwommb49X67jFkz80fR9Mb1YxTzqiWBSLYlEsikWxKBbFolgUi2JRLIpFsSgWxaJY03fHHOu40dH07bAzWCx9Ge/TiWbpHgdsjPGNB2f/yS+7xRCyiiZPJQAAAABJRU5ErkJggg==',
-			iconSize: [32, 32],
-			iconAnchor: [16, 16]}
+			iconSize: [12, 12],
+			iconAnchor: [6, 6]}
 		)
 	},
 
@@ -244,7 +243,7 @@ L.RotateHandle = L.EditHandle.extend({
 	options: {
 		TYPE: 'rotate',
 		icon: new L.Icon({ 
-			iconUrl: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAklEQVR4AewaftIAAAHiSURBVMXBa3HbShgA0PMp/1sCCo8oCEpgTaCXgIXAJiDzyCJoAUTm4UVQAns1Y8+snWnTvJyeE16hkjDgDrfoNTMKcpC9UPiLSo8JyetkjEHxjPCMyoS199kFoz8Iv1HpMaN3qWDCHoegOKkkRwnJpRmroHgiPFEZ8IBekzEGxQtUEhKSS/fB7Ew4U+lxcGkVZG9QWWPSFAxBcdK59KApuA+yNwp2uEdx1GN25sZJZULSfAtm77SlbNjju6MvG75u+WHRWVR6rDVjMPsgwYyVZl3pLTpHkyYHOx8syMiayaJzlDTZ9YyaZNFVkiYH2ZUEBcVJJXVImuz6Js3Qofe59pq7DoOTILu+g+a288mCouk7/1iH4qTS+2QdDppbV1ZJmrnDXnPnc5UOs2Z0fUmTuyBr+krvSioJyUmQO0dZM7mepMkWnaNRkyrJB6uskTSjxY3Fll8bvmJwlDb83FJ8gMqAB80uyBY3Trb82PAfvjj6vuHnluIdKgMeNXOwctK5NKBoHitrb1RJeHRp5Ux4ojLg0aWMHGQvUOkxIWkKVsHsTPiNSo8HDC5lZIsgO6n0uMUdRvQuFQxB8UR4RmXC2vvsgtEfhL+o9JiQvE7GGBTPCK9QSUjoMWgKDthjDrIX+h/k0I7gth6N5gAAAABJRU5ErkJggg==',
+			iconUrl: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAMAAABhq6zVAAAAXVBMVEUAAAD/AD3/AD3/AD3/AD3/AD3/AD3/AD3/AD3/AD3/AD3/AD3/AD3/AD3/AD3/AD3/AD3/AD3/AD3/AD3/AD3/AD3/AD3/AD3/AD3/AD3/AD3/AD3/AD3/AD3/AD0eXmYNAAAAHnRSTlMAAwYHCQoQEh0fNVBRX2N5fJG+wMfK3O3v8fP3+/37J2BkAAAATklEQVQIHQXBhQHCAADAsA53d1j+P5OkqoaqqmbHr/G8rGr1BuOmmjwB47L2AM51A/CrFwBDFwDf2gI41fAAfObV4gFe66qG3fV9P0yrPxEfCr3MVhkLAAAAAElFTkSuQmCC',
 			iconSize: [12, 12],
 			iconAnchor: [6, 6]}
 		)
@@ -309,30 +308,19 @@ L.DistortableImageOverlay = L.ImageOverlay.extend({
 	include: L.Mixin.Events,
 
 	options: {
-		alt: 'Option inside plugin',
-		interactive: true,
-		crossOrigin: true,
-		height: 520,
-		newOp: 'this should be merged to wrapper options',
-		// this height is tricky, without it the plugin can not work
+		alt: '',
+		height: 200,
+		crossOrigin: true
 	},
 
 	initialize: function(url, options) {
-		console.log('initialize');
-		console.log('"this" is DistortableImageOverlay object');
-		console.log(this);
 		this._url = url;
 		this._rotation = this.options.rotation;
-		console.log('this.options inside plugin');
-		console.log(this.options);
-		// the options here does not have data in vue wrapper
+
 		L.setOptions(this, options);
-		console.log('"this" after setOptions');
-		console.log(this);
 	},
 
 	onAdd: function(map) {
-		console.log('onAdd: this.options.corners ');
 		/* Copied from L.ImageOverlay */
 		this._map = map;
 
@@ -354,7 +342,7 @@ L.DistortableImageOverlay = L.ImageOverlay.extend({
 			/* This reset happens before image load; it allows 
 			 * us to place the image on the map earlier with 
 			 * "guessed" dimensions. */
-			this._reset(); 
+			this._reset();
 		}
 
 		/* Have to wait for the image to load because 
@@ -368,9 +356,9 @@ L.DistortableImageOverlay = L.ImageOverlay.extend({
 					map.on('zoomanim', this._animateZoom, this);
 				}
 			}
-		}, this);
+		}, this);		
 
-		this.fire('add');
+		this.fire('add');	
 	},
 
 	onRemove: function(map) {
@@ -488,16 +476,13 @@ L.DistortableImageOverlay = L.ImageOverlay.extend({
 			latLngToNewLayerPoint = function(latlng) {
 				return map._latLngToNewLayerPoint(latlng, event.zoom, event.center);
 			},
-
+	
 			transformMatrix = this._calculateProjectiveTransform(latLngToNewLayerPoint),
 			topLeft = latLngToNewLayerPoint(this._corners[0]),
 	
 			warp = L.DomUtil.getMatrixString(transformMatrix),
 			translation = this._getTranslateString(topLeft);
-
-		// console.log('latLngToNewLayerPoint ' + latLngToNewLayerPoint);
-		// console.log('transformMatrix ' + transformMatrix);
-
+	
 		/* See L.DomUtil.setPosition. Mainly for the purposes of L.Draggable. */
 		image._leaflet_pos = topLeft;
 	
@@ -560,15 +545,6 @@ L.DistortableImageOverlay = L.ImageOverlay.extend({
 	}
 });
 
-/**
- * Factory function to create the symbol.
- * @method distortableImageOverlay
- * @param url {String} The url of image.
- * @param options {Object} Additional options. 
- */
-L.distortableImageOverlay = function (url, options) {
-	return new L.DistortableImageOverlay(url, options);
-};
 L.DistortableImage = L.DistortableImage || {};
 
 var EditOverlayAction = LeafletToolbar.ToolbarAction.extend({
@@ -695,45 +671,23 @@ L.DistortableImage.Edit = L.Handler.extend({
 		this._overlay = overlay;
 
 		/* Interaction modes. */
-		this._mode = this._overlay.options.mode || 'rotate';
+		this._mode = this._overlay.options.mode || 'lock';
 		this._transparent = false;
 		this._outlined = false;
-
-		// this._handles = { 
-		// 	'lock':		 this._lockHandles, 
-		// 	'distort': this._distortHandles, 
-		// 	'rotate':	this._rotateHandles
-		// };
 	},
 
 	/* Run on image seletion. */
 	addHooks: function() {
-		console.log('run start addHook on DistortableImage.Edit');
 		var overlay = this._overlay,
 			map = overlay._map,
 			i;
-		console.log('overlay inside DistortableImage.Edit');
-		if (overlay._corners) {
-			console.log('overlay._corners is not undefined');
-		} else {
-			console.log('#################### overlay._corners UNDEFINED!');
-		}
-		console.log(overlay);
-			
-		console.log('### before _lockHandles');
 
 		this._lockHandles = new L.LayerGroup();
-
-		console.log('### after _lockHandles');
-		console.log(this._lockHandles);
-
 		for (i = 0; i < 4; i++) {
-			console.log('### inside first for loop');
 			this._lockHandles.addLayer(new L.LockHandle(overlay, i, { draggable: false }));
 		}
-	
-		this._distortHandles = new L.LayerGroup();
 
+		this._distortHandles = new L.LayerGroup();
 		for (i = 0; i < 4; i++) {
 			this._distortHandles.addLayer(new L.DistortHandle(overlay, i));
 		}
@@ -744,30 +698,39 @@ L.DistortableImage.Edit = L.Handler.extend({
 		}
 
 		this._handles = { 
-			'lock':		 this._lockHandles, 
+			'lock':		 this._lockHandles,
 			'distort': this._distortHandles, 
 			'rotate':	this._rotateHandles
 		};
 
 		if (this._mode === 'lock') {
 			map.addLayer(this._lockHandles);
-		} else {
+		}
+
+		if (this._mode === 'distort') {
+			console.log('change to distort mode');
 			this._mode = 'distort';
 			map.addLayer(this._distortHandles);
-			// this._mode = 'rotate';
-			// map.addLayer(this._rotateHandles);
 			this._enableDragging();
 		}
 
-		//overlay.on('click', this._showToolbar, this);
+		if (this._mode === 'rotate') {
+			console.log('change to rotate mode');
+			this._mode = 'rotate';
+			map.addLayer(this._rotateHandles);
+			this._enableDragging();
+		}
+
+		console.log('overlay');
+		console.log(overlay);
+
+		// overlay.on('click', this._showToolbar, this);
 		L.DomEvent.on(overlay._image, 'click', this._showToolbar, this);
-		// L.DomEvent.on(overlay._image, 'click', this.testFunction);
-		
+
 		/* Enable hotkeys. */
 		L.DomEvent.on(window, 'keydown', this._onKeyDown, this);
 
 		overlay.fire('select');
-		console.log('at the end of addHook on DistortableImage.Edit');
 	},
 
 	/* Run on image deseletion. */
@@ -906,30 +869,19 @@ L.DistortableImage.Edit = L.Handler.extend({
 	},
 
 	_toggleLock: function() {
-		console.log('run _toggleLock');
 		var map = this._overlay._map;
-		console.log('overlay');
-		console.log(this._overlay);
-		
-		console.log('map ' + map);
-		console.log('this._handles ' + JSON.stringify(this._handles));
-		
-		map.removeLayer(this._handles[this._mode]);
 
+		map.removeLayer(this._handles[this._mode]);
 		/* Switch mode. */
 		if (this._mode === 'lock') { 
-			this._mode = 'rotate';
-			console.log('before _enableDragging');
+			this._mode = 'rotate'; 
 			this._enableDragging();
-			console.log('after _enableDragging');
 		} else {
 			this._mode = 'lock';
-			console.log('before this.dragging.disable()');
 			if (this.dragging) { this.dragging.disable(); }
 			delete this.dragging;
-			console.log('after this.dragging.disable()');
 		}
-		console.log('this._mode ' + this._mode);
+
 		map.addLayer(this._handles[this._mode]);
 	},
 
@@ -942,17 +894,17 @@ L.DistortableImage.Edit = L.Handler.extend({
 	},
 
 	_showToolbar: function(event) {
+		console.log('_showToolbar');
 		var overlay = this._overlay,
-        target = event.target,
-				map = overlay._map;
+                  target = event.target,
+									map = overlay._map;
 
-		console.log('_showToolbar was called');
 		/* Ensure that there is only ever one toolbar attached to each image. */
 		this._hideToolbar();
 		var point;
 		if (event.containerPoint) { point = event.containerPoint; }
 		else { point = target._leaflet_pos; }
-		var raised_point = map.containerPointToLatLng(new L.Point(point.x,point.y-20));
+		var raised_point = map.containerPointToLatLng(new L.Point(100, 200));
 		raised_point.lng = overlay.getCenter().lng; 
 		this.toolbar = new L.DistortableImage.EditToolbar(raised_point).addTo(map, overlay);
 		overlay.fire('toolbar:created');
@@ -980,25 +932,10 @@ L.DistortableImage.Edit = L.Handler.extend({
 });
 
 L.DistortableImageOverlay.addInitHook(function() {
-	console.log('this inside addInitHook');
-	console.log(this);
 	this.editing = new L.DistortableImage.Edit(this);
-	console.log('editing handle got injected into image overlay');
-	console.log(this.editing);
-	// 'this' is the image object, and it works fine.
-	console.log('this.options is called when the imageOverlay init');
-	console.log(this.options);
-	// crash after this.
-	console.log('start enabling the edit handle');
-	if (this.options.editable) {
-		// this.options get correct data from vue wrapper
-		// 'this' does not have _image yet
-		// we want to turn on the enable after the _image loaded
-		
-		L.DomEvent.on(this._image, 'load', this.editing.enable, this.editing);
-		// crash after this !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-		console.log('finish enabling the edit handle');
+	if (this.options.editable) {
+		L.DomEvent.on(this._image, 'load', this.editing.enable, this.editing);
 	}
 
 	this.on('remove', function () {

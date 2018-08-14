@@ -18,23 +18,45 @@ L.DistortableImage.Edit = L.Handler.extend({
 		this._overlay = overlay;
 
 		/* Interaction modes. */
-		this._mode = this._overlay.options.mode || 'distort';
+		this._mode = this._overlay.options.mode || 'rotate';
 		this._transparent = false;
 		this._outlined = false;
+
+		// this._handles = { 
+		// 	'lock':		 this._lockHandles, 
+		// 	'distort': this._distortHandles, 
+		// 	'rotate':	this._rotateHandles
+		// };
 	},
 
 	/* Run on image seletion. */
 	addHooks: function() {
+		console.log('run start addHook on DistortableImage.Edit');
 		var overlay = this._overlay,
 			map = overlay._map,
 			i;
+		console.log('overlay inside DistortableImage.Edit');
+		if (overlay._corners) {
+			console.log('overlay._corners is not undefined');
+		} else {
+			console.log('#################### overlay._corners UNDEFINED!');
+		}
+		console.log(overlay);
+			
+		console.log('### before _lockHandles');
 
 		this._lockHandles = new L.LayerGroup();
+
+		console.log('### after _lockHandles');
+		console.log(this._lockHandles);
+
 		for (i = 0; i < 4; i++) {
+			console.log('### inside first for loop');
 			this._lockHandles.addLayer(new L.LockHandle(overlay, i, { draggable: false }));
 		}
-
+	
 		this._distortHandles = new L.LayerGroup();
+
 		for (i = 0; i < 4; i++) {
 			this._distortHandles.addLayer(new L.DistortHandle(overlay, i));
 		}
@@ -55,17 +77,20 @@ L.DistortableImage.Edit = L.Handler.extend({
 		} else {
 			this._mode = 'distort';
 			map.addLayer(this._distortHandles);
+			// this._mode = 'rotate';
+			// map.addLayer(this._rotateHandles);
 			this._enableDragging();
 		}
 
 		//overlay.on('click', this._showToolbar, this);
 		L.DomEvent.on(overlay._image, 'click', this._showToolbar, this);
-
+		// L.DomEvent.on(overlay._image, 'click', this.testFunction);
+		
 		/* Enable hotkeys. */
 		L.DomEvent.on(window, 'keydown', this._onKeyDown, this);
 
 		overlay.fire('select');
-
+		console.log('at the end of addHook on DistortableImage.Edit');
 	},
 
 	/* Run on image deseletion. */
@@ -204,19 +229,30 @@ L.DistortableImage.Edit = L.Handler.extend({
 	},
 
 	_toggleLock: function() {
+		console.log('run _toggleLock');
 		var map = this._overlay._map;
-
+		console.log('overlay');
+		console.log(this._overlay);
+		
+		console.log('map ' + map);
+		console.log('this._handles ' + JSON.stringify(this._handles));
+		
 		map.removeLayer(this._handles[this._mode]);
+
 		/* Switch mode. */
 		if (this._mode === 'lock') { 
-			this._mode = 'distort'; 
+			this._mode = 'rotate';
+			console.log('before _enableDragging');
 			this._enableDragging();
+			console.log('after _enableDragging');
 		} else {
 			this._mode = 'lock';
+			console.log('before this.dragging.disable()');
 			if (this.dragging) { this.dragging.disable(); }
 			delete this.dragging;
+			console.log('after this.dragging.disable()');
 		}
-
+		console.log('this._mode ' + this._mode);
 		map.addLayer(this._handles[this._mode]);
 	},
 
@@ -230,9 +266,10 @@ L.DistortableImage.Edit = L.Handler.extend({
 
 	_showToolbar: function(event) {
 		var overlay = this._overlay,
-                     target = event.target,
-			map = overlay._map;
+        target = event.target,
+				map = overlay._map;
 
+		console.log('_showToolbar was called');
 		/* Ensure that there is only ever one toolbar attached to each image. */
 		this._hideToolbar();
 		var point;
@@ -266,10 +303,25 @@ L.DistortableImage.Edit = L.Handler.extend({
 });
 
 L.DistortableImageOverlay.addInitHook(function() {
+	console.log('this inside addInitHook');
+	console.log(this);
 	this.editing = new L.DistortableImage.Edit(this);
-
+	console.log('editing handle got injected into image overlay');
+	console.log(this.editing);
+	// 'this' is the image object, and it works fine.
+	console.log('this.options is called when the imageOverlay init');
+	console.log(this.options);
+	// crash after this.
+	console.log('start enabling the edit handle');
 	if (this.options.editable) {
+		// this.options get correct data from vue wrapper
+		// 'this' does not have _image yet
+		// we want to turn on the enable after the _image loaded
+		
 		L.DomEvent.on(this._image, 'load', this.editing.enable, this.editing);
+		// crash after this !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+		console.log('finish enabling the edit handle');
 	}
 
 	this.on('remove', function () {

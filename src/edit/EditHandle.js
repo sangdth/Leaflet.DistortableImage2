@@ -1,8 +1,11 @@
 L.EditHandle = L.Marker.extend({
 	initialize: function(overlay, corner, options) {
+		console.log('init inside EditHandler');
+		console.log(overlay);
+		
 		var markerOptions,
 			latlng = overlay._corners[corner];
-
+		
 		L.setOptions(this, options);
 
 		this._handled = overlay;
