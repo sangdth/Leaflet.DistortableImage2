@@ -4,5 +4,5 @@ todo.txt
 *.swp
 *.swo
 yarn.lock
-npm-lock.json
+package-lock.json
 .vscode
