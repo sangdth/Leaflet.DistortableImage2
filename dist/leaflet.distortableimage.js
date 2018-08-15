@@ -314,7 +314,7 @@ L.DistortableImageOverlay = L.ImageOverlay.extend({
 	},
 
 	initialize: function(url, options) {
-		console.log('initialize asdfasdfsafsadf');
+		console.log('initialize jklhjlhjk');
 		// console.log('"this" is DistortableImageOverlay object');
 		// console.log(this);
 		this._url = url;
