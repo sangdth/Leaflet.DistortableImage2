@@ -10,7 +10,7 @@ L.DistortableImageOverlay = L.ImageOverlay.extend({
 	},
 
 	initialize: function(url, options) {
-		// console.log('initialize');
+		console.log('initialize asdfasdfsafsadf');
 		// console.log('"this" is DistortableImageOverlay object');
 		// console.log(this);
 		this._url = url;
@@ -257,7 +257,7 @@ L.DistortableImageOverlay = L.ImageOverlay.extend({
  * Factory function to create the symbol.
  * @method distortableImageOverlay
  * @param url {String} The url of image.
- * @param options {Object} Additional options. 
+ * @param options {Object} Options. 
  */
 L.distortableImageOverlay = function (url, options) {
 	return new L.DistortableImageOverlay(url, options);

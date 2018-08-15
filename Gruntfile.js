@@ -49,17 +49,17 @@ module.exports = function(grunt) {
             }
         },
 
-        karma: {
-            development: {
-                configFile: 'test/karma.conf.js',
-                background: true
-            },
-            test: {
-                configFile: 'test/karma.conf.js',
-                background: false,
-                singleRun: true
-            }
-        },
+        // karma: {
+        //     development: {
+        //         configFile: 'test/karma.conf.js',
+        //         background: true
+        //     },
+        //     test: {
+        //         configFile: 'test/karma.conf.js',
+        //         background: false,
+        //         singleRun: true
+        //     }
+        // },
 
         watch: {
             options : {
@@ -93,14 +93,19 @@ module.exports = function(grunt) {
     });
 
     /* Run tests once. */
-    grunt.registerTask('test', [ 'jshint', 'karma:test' ]);
+    grunt.registerTask('test', [ 
+        'jshint', 
+        // 'karma:test'
+    ]);
 
     /* Default (development): Watch files and lint, test, and build on change. */
-    grunt.registerTask('default', ['karma:development:start', 'watch']);
+    grunt.registerTask('default', [
+        // 'karma:development:start',
+        'watch']);
 
     grunt.registerTask('build', [
         'jshint',
-        'karma:development:run',
+        // 'karma:development:run',
         'coverage',
         'concat:dist'
     ]);

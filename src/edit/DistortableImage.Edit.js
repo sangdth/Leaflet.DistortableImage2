@@ -2,8 +2,8 @@
 
 L.DistortableImage.Edit = L.Handler.extend({
 	options: {
-		opacity: 0.7,
-		outline: '1px solid red',
+		opacity: 1,
+		outline: '2px solid red',
 		keymap: {
 			68: '_toggleRotateDistort', // d
 			73: '_toggleIsolate', // i
@@ -22,36 +22,26 @@ L.DistortableImage.Edit = L.Handler.extend({
 		this._transparent = false;
 		this._outlined = false;
 
-		this._handles = { 
-			'lock':		 this._lockHandles, 
-			'distort': this._distortHandles, 
-			'rotate':	this._rotateHandles
-		};
+		// this._handles = {
+		// 	'lock':		 this._lockHandles, 
+		// 	'distort': this._distortHandles, 
+		// 	'rotate':	this._rotateHandles
+		// };
 	},
 
 	/* Run on image seletion. */
 	addHooks: function() {
-		console.log('run start addHook on DistortableImage.Edit');
+		// console.log('run start addHook on DistortableImage.Edit');
 		var overlay = this._overlay,
 			map = overlay._map,
 			i;
-		console.log('overlay inside DistortableImage.Edit');
-		if (overlay._corners) {
-			console.log('overlay._corners is not undefined');
-		} else {
-			console.log('#################### overlay._corners UNDEFINED!');
-		}
-		console.log(overlay);
-			
-		console.log('### before _lockHandles');
+		// console.log('overlay inside DistortableImage.Edit');
+		// console.log(overlay);
+		// console.log('### before _lockHandles');
 
 		this._lockHandles = new L.LayerGroup();
 
-		console.log('### after _lockHandles');
-		console.log(this._lockHandles);
-
 		for (i = 0; i < 4; i++) {
-			console.log('### inside first for loop');
 			this._lockHandles.addLayer(new L.LockHandle(overlay, i, { draggable: false }));
 		}
 	
@@ -66,7 +56,7 @@ L.DistortableImage.Edit = L.Handler.extend({
 			this._rotateHandles.addLayer(new L.RotateHandle(overlay, i));
 		}
 
-		this._handles = { 
+		this._handles = {
 			'lock':		 this._lockHandles, 
 			'distort': this._distortHandles, 
 			'rotate':	this._rotateHandles
@@ -90,7 +80,7 @@ L.DistortableImage.Edit = L.Handler.extend({
 		L.DomEvent.on(window, 'keydown', this._onKeyDown, this);
 
 		overlay.fire('select');
-		console.log('at the end of addHook on DistortableImage.Edit');
+		// console.log('at the end of addHook on DistortableImage.Edit');
 	},
 
 	/* Run on image deseletion. */

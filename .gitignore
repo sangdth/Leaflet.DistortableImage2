@@ -3,3 +3,6 @@ coverage
 todo.txt
 *.swp
 *.swo
+yarn.lock
+npm-lock.json
+.vscode
